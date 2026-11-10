@@ -1,0 +1,9 @@
+{
+  "name": "business-card-scanner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scan business cards, OCR them with Claude Vision, store them in Google Drive, and add them to iPhone Contacts in one tap.",
+  "scripts": {
+    "dev": "netlify dev"
+  }
+}

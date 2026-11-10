@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Business Card Scanner</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>📇 Card Scanner</h1>
+    <div id="driveStatus" class="drive-status">
+      <button id="connectBtn" class="btn btn-secondary">Connect Google Drive</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="scanSection" class="card">
+      <h2>Scan a card</h2>
+      <div class="scan-row">
+        <label class="btn btn-primary file-btn">
+          📷 Take / choose photo
+          <input type="file" id="fileInput" accept="image/*" capture="environment" hidden />
+        </label>
+        <span id="scanHint" class="hint">Point your camera at a business card.</span>
+      </div>
+      <img id="preview" class="preview" hidden alt="Card preview" />
+      <button id="scanBtn" class="btn btn-primary" hidden>✨ Read this card</button>
+      <p id="scanStatus" class="status" hidden></p>
+    </section>
+
+    <section id="reviewSection" class="card" hidden>
+      <h2>Review &amp; save</h2>
+      <form id="reviewForm">
+        <label>Name <input name="name" type="text" /></label>
+        <label>Title <input name="title" type="text" /></label>
+        <label>Company <input name="company" type="text" /></label>
+        <label>Phone(s) <textarea name="phones" rows="2" placeholder="One per line"></textarea></label>
+        <label>Email(s) <textarea name="emails" rows="2" placeholder="One per line"></textarea></label>
+        <label>Website <input name="website" type="text" /></label>
+        <label>Address <textarea name="address" rows="2"></textarea></label>
+        <label>Notes <textarea name="notes" rows="2"></textarea></label>
+      </form>
+      <div class="action-row">
+        <button id="saveBtn" class="btn btn-primary">💾 Save to Drive</button>
+        <button id="addContactBtn" class="btn btn-secondary">➕ Add to iPhone Contacts</button>
+        <button id="discardBtn" class="btn btn-text">Discard</button>
+      </div>
+      <p id="saveStatus" class="status" hidden></p>
+    </section>
+
+    <section class="card">
+      <h2>Saved cards</h2>
+      <input id="searchBox" type="search" placeholder="Search name, company, email…" class="search" />
+      <p id="listStatus" class="status"></p>
+      <ul id="cardList" class="card-list"></ul>
+    </section>
+  </main>
+
+  <div id="settingsModal" class="modal" hidden>
+    <div class="modal-box">
+      <h2>One-time setup</h2>
+      <p>This app stores your scanned cards in your own Google Drive. Paste the Google OAuth Client ID for this site (see the README for how to create one):</p>
+      <input id="clientIdInput" type="text" placeholder="xxxxxxxxxx.apps.googleusercontent.com" />
+      <div class="action-row">
+        <button id="saveClientIdBtn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
