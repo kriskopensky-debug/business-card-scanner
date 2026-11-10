@@ -12,12 +12,25 @@ const FIELDS_SCHEMA = `{
 }`;
 
 exports.handler = async (event) => {
+  try {
+    return await handle(event);
+  } catch (err) {
+    console.error("OCR function: unexpected error:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: `Unexpected server error: ${err.message}` }),
+    };
+  }
+};
+
+async function handle(event) {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
+    console.error("OCR function: ANTHROPIC_API_KEY is not set.");
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "ANTHROPIC_API_KEY is not configured on this Netlify site." }),
@@ -69,9 +82,10 @@ exports.handler = async (event) => {
 
   if (!anthropicRes.ok) {
     const errText = await anthropicRes.text();
+    console.error(`OCR function: Anthropic API returned ${anthropicRes.status}: ${errText}`);
     return {
       statusCode: 502,
-      body: JSON.stringify({ error: "OCR provider error.", detail: errText }),
+      body: JSON.stringify({ error: `OCR provider error (${anthropicRes.status}): ${errText}`, detail: errText }),
     };
   }
 
@@ -82,7 +96,8 @@ exports.handler = async (event) => {
   try {
     const jsonText = raw.replace(/^```(json)?/i, "").replace(/```$/, "").trim();
     fields = JSON.parse(jsonText);
-  } catch {
+  } catch (err) {
+    console.error(`OCR function: could not parse model output as JSON. Raw: ${raw}`);
     return {
       statusCode: 502,
       body: JSON.stringify({ error: "Could not parse OCR response as JSON.", raw }),
@@ -94,4 +109,4 @@ exports.handler = async (event) => {
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ fields }),
   };
-};
+}
